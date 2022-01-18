@@ -1,8 +1,9 @@
 package main
 
 import (
+	"crypto/tls"
 	"flag"
-	"tls"
+	"time"
 
 	"github.com/lucas-clemente/quic-go"
 	"github.com/lucas-clemente/quic-go/http3"
@@ -20,10 +21,10 @@ func main() {
 
 
 	rt := &http3.RoundTripper{
-		TLSClientConfig: {
+		TLSClientConfig: &tls.Config{
 
 		},
-		QuicConfig: {
+		QuicConfig: &quic.Config{
 			KeepAlive:      true,
 			Versions:       []quic.VersionNumber{quic.VersionDraft29},
 			MaxIdleTimeout: 3 * time.Second,
