@@ -16,10 +16,22 @@ var (
 	server string
 	count  int
 	typ    string
+	size   int
 )
+
+
 
 func serverHandler() {
 
+	helloHandler := func(w http.ResponseWriter, req *http.Request) {
+		buffer := make([]byte, size)
+		w.Header().Add("Content-Length", fmt.Sprintf("%d", size))
+		w.WriteHeader(200)
+		w.Write(buffer)
+	}
+
+	err := http3.ListenAndServeQUIC("0.0.0.0:443", "giaclient.crt", "giaclient.key", helloHandler)
+	println("listen server failed, err:", err.Error())
 }
 
 func main() {
@@ -28,6 +40,7 @@ func main() {
 	flag.StringVar(&server, "s", "", "server address")
 	flag.IntVar(&count, "c", 1, "count")
 	flag.StringVar(&typ, "t", "client", "programe type client/server")
+	flag.IntVar(&size, "size", 1024*1024, "size")
 
 	flag.Parse()
 
