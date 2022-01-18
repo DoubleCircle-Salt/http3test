@@ -19,18 +19,21 @@ var (
 	size   int
 )
 
+type SS struct {
+}
+
+func (ss *SS) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+	buffer := make([]byte, size)
+	w.Header().Add("Content-Length", fmt.Sprintf("%d", size))
+	w.WriteHeader(200)
+	w.Write(buffer)
+}
+
 
 
 func serverHandler() {
 
-	helloHandler := func(w http.ResponseWriter, req *http.Request) {
-		buffer := make([]byte, size)
-		w.Header().Add("Content-Length", fmt.Sprintf("%d", size))
-		w.WriteHeader(200)
-		w.Write(buffer)
-	}
-
-	err := http3.ListenAndServeQUIC("0.0.0.0:443", "giaclient.crt", "giaclient.key", helloHandler)
+	err := http3.ListenAndServeQUIC("0.0.0.0:443", "giaclient.crt", "giaclient.key", &SS{})
 	println("listen server failed, err:", err.Error())
 }
 
