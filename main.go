@@ -31,4 +31,6 @@ func main() {
 			MaxIdleTimeout: 3 * time.Second,
 		},
 	}
+
+	response := roundTripper.RoundTrip()
 }
