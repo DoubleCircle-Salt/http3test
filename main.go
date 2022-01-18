@@ -38,30 +38,36 @@ func main() {
 		},
 	}
 
-	request, err := http.NewRequest("GET", "https://162.221.195.12/test.file", nil)
-	if err != nil {
-		println("create request failed, error:", err.Error())
-		return
+	for i := 0; i < count; i++ {
+		go func() {
+
+			request, err := http.NewRequest("GET", "https://162.221.195.12/test.file", nil)
+			if err != nil {
+				println("create request failed, error:", err.Error())
+				return
+			}
+
+			response, err := roundTripper.RoundTrip(request)
+			if err != nil {
+				println("get response failed, error:", err.Error())
+				return
+			}
+
+			println("status:", response.Status)
+
+			buffer := make([]byte, 4096)
+			n := 0
+			for {
+				nn, err := response.Body.Read(buffer)
+				n += nn
+				if err != nil {
+					println("read failed, err:", err.Error())
+					return
+				}
+			}
+
+			println("read", n, "bytes")
+		}()
 	}
-
-	response, err := roundTripper.RoundTrip(request)
-	if err != nil {
-		println("get response failed, error:", err.Error())
-		return
-	}
-
-	println("status:", response.Status)
-
-	buffer := make([]byte, 4096)
-	n := 0
-	for {
-		nn, err := response.Body.Read(buffer)
-		n += nn
-		if err != nil {
-			println("read failed, err:", err.Error())
-			return
-		}
-	}
-
-	println("read", n, "bytes")
+	time.Sleep(time.Hour)
 }
