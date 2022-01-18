@@ -29,10 +29,7 @@ func (ss *SS) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	w.Write(buffer)
 }
 
-
-
 func serverHandler() {
-
 	err := http3.ListenAndServeQUIC("0.0.0.0:443", "giaclient.crt", "giaclient.key", &SS{})
 	println("listen server failed, err:", err.Error())
 }
@@ -47,13 +44,14 @@ func main() {
 
 	flag.Parse()
 
-	if server == "" {
-		println("with no server")
+	if typ == "server" {
+		serverHandler()
 		return
 	}
 
-	if typ == "server" {
-		serverHandler()
+	if server == "" {
+		println("with no server")
+		return
 	}
 
 	for i := 0; i < count; i++ {
