@@ -20,6 +20,8 @@ func main() {
 	flag.StringVar(&server, "s", "", "server address")
 
 
+
+
 	roundTripper := &http3.RoundTripper{
 		TLSClientConfig: &tls.Config{
 			ServerName:         "giasstest.ecn.zenlayer.net",
@@ -32,5 +34,15 @@ func main() {
 		},
 	}
 
-	response := roundTripper.RoundTrip()
+	request, err := http.NewReqeust("GET", "https://129.227.57.122/index.html", nil)
+	if err != nil {
+		println("create request failed, error:", err.Error())
+		return
+	}
+
+	response, err := roundTripper.RoundTrip(request)
+	if err != nil {
+		println("get response failed, error:", err.Error())
+		return
+	}
 }
