@@ -27,6 +27,7 @@ func main() {
 		TLSClientConfig: &tls.Config{
 			ServerName:         "giasstest.ecn.zenlayer.net",
 			ClientSessionCache: tls.NewLRUClientSessionCache(64),
+			InsecureSkipVerify: true,
 		},
 		QuicConfig: &quic.Config{
 			KeepAlive:      true,
