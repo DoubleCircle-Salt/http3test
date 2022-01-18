@@ -3,6 +3,7 @@ package main
 import (
 	"crypto/tls"
 	"flag"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -24,6 +25,10 @@ func main() {
 
 	flag.Parse()
 
+	if server == "" {
+		println("with no server")
+		return
+	}
 
 	for i := 0; i < count; i++ {
 		go func() {
@@ -43,7 +48,7 @@ func main() {
 					},
 				}
 
-				request, err := http.NewRequest("GET", "https://162.221.195.12/test.file", nil)
+				request, err := http.NewRequest("GET", fmt.Sprintf("https://%s/test.file", server), nil)
 				if err != nil {
 					println("create request failed, error:", err.Error())
 					return
