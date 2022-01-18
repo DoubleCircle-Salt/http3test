@@ -46,4 +46,6 @@ func main() {
 		println("get response failed, error:", err.Error())
 		return
 	}
+
+	println("status:", response.Status)
 }
