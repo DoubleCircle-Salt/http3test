@@ -49,4 +49,17 @@ func main() {
 	}
 
 	println("status:", response.Status)
+
+	buffer := make([]byte, 4096)
+	n := 0
+	for {
+		nn, err := response.Body.Read(buffer)
+		n += nn
+		if err != nil {
+			println("read failed, err:", err.Error())
+			return
+		}
+	}
+
+	println("read", n, "bytes")
 }
