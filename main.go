@@ -13,14 +13,16 @@ import (
 var (
 	port   int
 	server string
+	count  int
 )
 
 func main() {
 
 	flag.IntVar(&port, "p", 443, "server port")
 	flag.StringVar(&server, "s", "", "server address")
+	flag.IntVar(&count, "c", 1, "count")
 
-
+	flag.Parse()
 
 
 	roundTripper := &http3.RoundTripper{
