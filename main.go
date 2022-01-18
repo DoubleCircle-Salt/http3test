@@ -22,7 +22,8 @@ func main() {
 
 	rt := &http3.RoundTripper{
 		TLSClientConfig: &tls.Config{
-
+			ServerName:         "giasstest.ecn.zenlayer.net",
+			ClientSessionCache: tls.NewLRUClientSessionCache(64),
 		},
 		QuicConfig: &quic.Config{
 			KeepAlive:      true,
