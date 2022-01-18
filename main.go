@@ -36,7 +36,7 @@ func main() {
 		},
 	}
 
-	request, err := http.NewRequest("GET", "https://128.14.141.109/test.file", nil)
+	request, err := http.NewRequest("GET", "https://162.221.195.12/test.file", nil)
 	if err != nil {
 		println("create request failed, error:", err.Error())
 		return
