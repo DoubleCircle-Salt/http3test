@@ -15,19 +15,29 @@ var (
 	port   int
 	server string
 	count  int
+	typ    string
 )
+
+func serverHandler() {
+
+}
 
 func main() {
 
 	flag.IntVar(&port, "p", 443, "server port")
 	flag.StringVar(&server, "s", "", "server address")
 	flag.IntVar(&count, "c", 1, "count")
+	flag.StringVar(&typ, "t", "client", "programe type client/server")
 
 	flag.Parse()
 
 	if server == "" {
 		println("with no server")
 		return
+	}
+
+	if typ == "server" {
+		serverHandler()
 	}
 
 	for i := 0; i < count; i++ {
