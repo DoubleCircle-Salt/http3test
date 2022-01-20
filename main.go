@@ -4,9 +4,9 @@ import (
 	"crypto/tls"
 	"flag"
 	"fmt"
-	"io"
+	//"io"
 	"net/http"
-	"os"
+	//"os"
 	"time"
 
 	"github.com/lucas-clemente/quic-go"
@@ -25,25 +25,19 @@ type SS struct {
 }
 
 func (ss *SS) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-	//buffer := make([]byte, size)
-	
-	f, err := os.Open("test.file")
-	if err != nil {
-		w.WriteHeader(404)
-		return
-	}
 
-	fi, err := f.Stat()
-	if err != nil {
-		w.WriteHeader(404)
-		return
-	}
-
-	w.Header().Add("Content-Length", fmt.Sprintf("%d", fi.Size()))
+	w.Header().Add("Content-Length", fmt.Sprintf("%d", 1024*256*4096))
 	
 
 	w.WriteHeader(200)
-	io.Copy(w, f)
+
+	buffer := make([]byte, 4096)
+	for i := 0; i < 1024*256; i++ {
+		_, err := w.Write(buffer)
+		if err != nil {
+			println("write failed:", err.Error())
+		}
+	}
 }
 
 func serverHandler() {
