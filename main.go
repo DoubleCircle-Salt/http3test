@@ -65,52 +65,49 @@ func main() {
 		return
 	}
 
-	for i := 0; i < count; i++ {
-		go func() {
-			for {
-
-
-				roundTripper := &http3.RoundTripper{
-					TLSClientConfig: &tls.Config{
-						ServerName:         "giasstest.ecn.zenlayer.net",
-						ClientSessionCache: tls.NewLRUClientSessionCache(64),
-						InsecureSkipVerify: true,
-					},
-					QuicConfig: &quic.Config{
-						KeepAlive:      true,
-						Versions:       []quic.VersionNumber{quic.VersionDraft29},
-						MaxIdleTimeout: 3 * time.Second,
-					},
-				}
-
-				request, err := http.NewRequest("GET", fmt.Sprintf("https://%s/test.file", server), nil)
-				if err != nil {
-					println("create request failed, error:", err.Error())
-					return
-				}
-
-				response, err := roundTripper.RoundTrip(request)
-				if err != nil {
-					println("get response failed, error:", err.Error())
-					return
-				}
-
-				println("status:", response.Status)
-
-				buffer := make([]byte, 4096)
-				n := 0
-				for {
-					nn, err := response.Body.Read(buffer)
-					n += nn
-					if err != nil {
-						println("read failed, err:", err.Error())
-						return
-					}
-				}
-
-				println("read", n, "bytes")
-			}
-		}()
+	roundTripper := &http3.RoundTripper{
+		TLSClientConfig: &tls.Config{
+			ServerName:         "giasstest.ecn.zenlayer.net",
+			ClientSessionCache: tls.NewLRUClientSessionCache(64),
+			InsecureSkipVerify: true,
+		},
+		QuicConfig: &quic.Config{
+			KeepAlive:      true,
+			Versions:       []quic.VersionNumber{quic.VersionDraft29},
+			MaxIdleTimeout: 3 * time.Second,
+		},
 	}
-	time.Sleep(time.Hour)
+	for i := 0; i < count; i++ {
+
+		println("begin time:", time.Now().UnixNano()/1000000)
+		request, err := http.NewRequest("GET", fmt.Sprintf("https://%s/index.html", server), nil)
+		if err != nil {
+			println("create request failed, error:", err.Error())
+			return
+		}
+
+		response, err := roundTripper.RoundTrip(request)
+		if err != nil {
+			println("get response failed, error:", err.Error())
+			return
+		}
+		println("end time:", time.Now().UnixNano()/1000000)
+
+		println("status:", response.Status)
+
+		buffer := make([]byte, 4096)
+		n := 0
+		for {
+			nn, err := response.Body.Read(buffer)
+			n += nn
+			if err != nil {
+				println("read failed, err:", err.Error())
+				break
+			}
+		}
+		println("read", n, "bytes")
+	}
+
+	
 }
+
