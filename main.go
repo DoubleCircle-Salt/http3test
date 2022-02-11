@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	//"io"
+	"net"
 	"net/http"
 	//"os"
 	"time"
@@ -40,6 +41,17 @@ func (ss *SS) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
+func tcpingHandler() {
+	startTime := time.Now()
+	_, err := net.Dial("tcp", fmt.Sprintf("%s:%d", server, port))
+	if err != nil {
+		println("dial failed:", err.Error())
+		return
+	}
+	endTime := time.Now()
+	println("dial", fmt.Sprintf("%s:%d", server, port), "used", endTime.Sub(startTime).Milliseconds(), "ms")
+}
+
 func serverHandler() {
 	err := http3.ListenAndServeQUIC("0.0.0.0:443", "giaclient.crt", "giaclient.key", &SS{})
 	println("listen server failed, err:", err.Error())
@@ -54,6 +66,11 @@ func main() {
 	flag.IntVar(&size, "size", 1024*1024, "size")
 
 	flag.Parse()
+
+	if typ == "tcping" {
+		tcpingHandler()
+		return
+	}
 
 	if typ == "server" {
 		serverHandler()
