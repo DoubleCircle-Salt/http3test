@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"github.com/lucas-clemente/quic-go"
-	"github.com/lucas-clemente/quic-go/http3"
+	"github.com/lucas-clemente/quic-go/h2quic"
 )
 
 var (
@@ -53,7 +53,7 @@ func tcpingHandler() {
 }
 
 func serverHandler() {
-	err := http3.ListenAndServeQUIC("0.0.0.0:443", "giaclient.crt", "giaclient.key", &SS{})
+	err := h2quic.ListenAndServeQUIC("0.0.0.0:443", "giaclient.crt", "giaclient.key", &SS{})
 	println("listen server failed, err:", err.Error())
 }
 
@@ -87,7 +87,7 @@ func main() {
 			for {
 
 
-				roundTripper := &http3.RoundTripper{
+				roundTripper := &h2quic.RoundTripper{
 					TLSClientConfig: &tls.Config{
 						ServerName:         "giasstest.ecn.zenlayer.net",
 						ClientSessionCache: tls.NewLRUClientSessionCache(64),
@@ -95,8 +95,8 @@ func main() {
 					},
 					QuicConfig: &quic.Config{
 						KeepAlive:      true,
-						Versions:       []quic.VersionNumber{quic.VersionDraft29},
-						MaxIdleTimeout: 3 * time.Second,
+						//Versions:       []quic.VersionNumber{quic.VersionDraft29},
+						//MaxIdleTimeout: 3 * time.Second,
 					},
 				}
 
