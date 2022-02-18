@@ -4,7 +4,7 @@ import (
 	"crypto/tls"
 	"flag"
 	"fmt"
-	//"io"
+	"io"
 	"net"
 	"net/http"
 	//"os"
@@ -120,6 +120,9 @@ func main() {
 					nn, err := response.Body.Read(buffer)
 					n += nn
 					if err != nil {
+						if err == io.EOF {
+							break
+						}
 						println("read failed, err:", err.Error())
 						return
 					}
