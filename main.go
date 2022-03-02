@@ -103,13 +103,13 @@ func main() {
 				request, err := http.NewRequest("GET", fmt.Sprintf("https://%s/test.file", server), nil)
 				if err != nil {
 					println("create request failed, error:", err.Error())
-					return
+					continue
 				}
 
 				response, err := roundTripper.RoundTrip(request)
 				if err != nil {
 					println("get response failed, error:", err.Error())
-					return
+					continue
 				}
 
 				println("status:", response.Status)
@@ -124,7 +124,7 @@ func main() {
 							break
 						}
 						println("read failed, err:", err.Error())
-						return
+						break
 					}
 				}
 
